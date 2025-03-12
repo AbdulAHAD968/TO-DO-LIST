@@ -2,7 +2,9 @@
 
 A simple and stylish TO-DO List web application built with HTML, CSS, and JavaScript. This app allows users to add, view, and remove tasks. Tasks are stored in the browser's local storage, so they persist even after refreshing the page.
 
-![TO-DO List Screenshot](https://abdulahad968.github.io/TO-DO-LIST/assets/cover-image.png) <!-- Add a screenshot if you have one -->
+<div align="center">
+   <img src"/assets/cover-image.PNG"/>
+</div>
 
 ## Features
 
