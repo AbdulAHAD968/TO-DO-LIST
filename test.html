@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your IP Address</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        #ip { font-size: 24px; color: #007bff; }
+    </style>
+</head>
+<body>
+    <h1>Your IP Address:</h1>
+    <p id="ip">Fetching...</p>
+
+    <script>
+        fetch("https://api64.ipify.org?format=json")
+            .then(response => response.json())
+            .then(data => document.getElementById("ip").innerText = data.ip)
+            .catch(error => console.error("Error fetching IP:", error));
+    </script>
+</body>
+</html>

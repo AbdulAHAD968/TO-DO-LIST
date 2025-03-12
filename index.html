@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO-DO LIST</title>
+
+    <!-- SEO TAGS -->
+    <meta name="description" content="A simple to-do list with HTML, CSS, and JavaScript">
+    <meta name="author" content="Abdul Ahad">
+    <meta name="keywords" content="to-do, list, HTML, CSS, JavaScript">
+    <meta name="robots" content="index, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="./assets/listing.png" type="image/x-icon">
+
+
+    <!-- HEADER STYLING -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    
+        p {
+            font-size: 20px;
+            font-weight: bolder;
+        }
+    
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 31, 62, 0.5);
+            backdrop-filter: blur(20px);
+            padding: 13px;
+            border-radius: 50px;
+            width: 90%;
+            max-width: 1200px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+    
+        .theme-switch {
+            width: 110px;
+            height: 50px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            box-shadow: inset 0 0 5px 4px rgba(255, 255, 255, 1),
+                inset 0 0 20px 1px rgba(0, 0, 0, 0.488), 10px 20px 30px rgba(0, 0, 0, 0.096),
+                inset 0 0 0 3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.4s;
+        }
+    
+        .theme-switch:hover {
+            -webkit-transform: perspective(100px) rotateX(5deg) rotateY(-5deg);
+            transform: perspective(100px) rotateX(5deg) rotateY(-5deg);
+            transform-style: preserve-3d;
+            transform-origin: center;
+        }
+    
+        .theme-switch::before {
+            content: "";
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(130deg, #757272 10%, #ffffff 11%, #726f6f 62%);
+            border-radius: 50%;
+            top: 10px;
+            left: 10px;
+            box-shadow: 0 2px 1px rgba(0, 0, 0, 0.3), 10px 10px 10px rgba(0, 0, 0, 0.3);
+            transition: 0.4s;
+        }
+    
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #000;
+        }
+    
+        body.dark-mode header {
+            background: linear-gradient(43deg, #563c70 0%, #3b4881 46%, #323d75 100%);
+        }
+    
+        body.dark-mode footer {
+            background: linear-gradient(43deg, #563c70 0%, #3b4881 46%, #323d75 100%);
+        }
+
+        body.dark-mode .main-container {
+            background: linear-gradient(43deg, #0A1F3E 0%, #1E3A2F 46%, #104288 100%);
+        }
+    
+        /* When toggled */
+        .theme-switch.active::before {
+            left: 70px;
+            background: linear-gradient(315deg, #000000 0%, #414141 70%);
+        }
+    
+        header h1 {
+            font-size: 2rem;
+            color: rgb(255, 199, 45);
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+    
+        /* Mobile size */
+        @media (max-width: 768px) {
+            .theme-switch {
+                width: 80px;
+                height: 40px;
+            }
+    
+            .theme-switch::before {
+                width: 30px;
+                height: 30px;
+                top: 5px;
+                left: 5px;
+            }
+    
+            .theme-switch.active::before {
+                left: 43px;
+            }
+    
+            header h1 {
+                font-size: 1.25rem;
+            }
+        }
+    
+        @media (max-width: 480px) {
+            .theme-switch {
+                width: 60px;
+                height: 30px;
+            }
+    
+            .theme-switch::before {
+                width: 20px;
+                height: 20px;
+                top: 5px;
+                left: 10px;
+            }
+    
+            .theme-switch.active::before {
+                left: 35px;
+            }
+    
+            header h1 {
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+
+    <!-- MAIN LIST STYLING -->
+    <style>
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        .main-container {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(43deg, #764ba2 0%, #667eea 46%, #4a60d2 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            width: 90%;
+            max-width: 400px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            box-shadow: 0 12px 40px rgba(183, 75, 75, 0.3);
+        }
+
+        h1 {
+            text-size-adjust: 1rem;
+            text-align: center;
+            margin-bottom: 1.15rem;
+            font-size: 1.75rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        p{
+            margin-bottom: 1.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        span{
+            font-size: 1.5rem;
+        }
+
+        form {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        input[type="text"]:focus {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        input[type="submit"] {
+            width: 25%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            background: #764ba2;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        input[type="submit"]:hover {
+            background: #30b03dd6;
+            transform: scale(1.05);
+        }
+
+        ul {
+            list-style: square;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background: rgba(54, 53, 46, 0.2);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.625rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        li:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        li button {
+            background: #ff4d4d;
+            border: none;
+            color: #fff;
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        li button:hover {
+            background: #cc0000;
+            transform: scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+            p{
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 12px;
+            }
+            p{
+                font-size: 0.3rem;
+            }
+        }
+    </style>
+
+
+    <!-- SCROLL BAR DESIGN -->
+    <style>
+
+        * {
+            cursor:-moz-grabbing;
+        }
+
+        body {
+            overflow-y: scroll;
+            scrollbar-width: thin;
+            scrollbar-color: rgb(65, 88, 208) rgb(200, 80, 192);
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar{
+            width: 15px;
+            border-radius: 5px;
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: rgb(200, 80, 192);
+            border-radius: 4px;
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgb(65, 88, 208);
+            scroll-behavior: smooth;
+        }
+    </style>
+
+
+    <!-- CURSOR COLOR SELECTION CHANGE -->
+    <style>
+        ::selection {
+            background-color: rgb(255, 204, 112);
+            color: #333;
+        }
+
+        /* For webkit browsers (Chrome, Safari) */
+        ::-moz-selection {
+            background-color: rgb(255, 204, 112);
+            color: #333;
+        }
+
+        /* For Firefox */
+        ::selection {
+            background-color: rgb(255, 204, 112);
+            color: #333;
+        }
+
+    </style>
+
+
+    <!-- FOOTER SECTION -->
+    <style>
+
+        footer {
+            background: linear-gradient(43deg, #66428a 0%, #42539e 46%, #303d82 100%);
+            text-align: center;
+            padding: 20px;
+            /* border-radius: 4px; */
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .footer {
+            display: block;
+            justify-content: space-around;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <img src="./assets/to-do-list.gif" alt="Logo" height="5%" width="5%" style="border-radius: 20%;">
+        <h1 id="ip-dekhao">Fetching Your IP...</h1>
+        <div class="theme-switch" onclick="toggleTheme()"></div>
+    </header>
+
+
+    <div class="main-container">
+        <div class="container">
+            <h1>My TO-DO LIST</h1>
+            <form id="khata_form">
+                <input type="text" id="task" placeholder="Add a new task" required>
+                <input type="submit" value="Add">
+            </form>
+            <ul id="khata_list"></ul>
+        </div>
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer>
+            
+        <div class="maintain">
+            <hr style="width: 70%; height: 4px; background: linear-gradient(43deg, #aa57fe 0%, #6985ff 46%, #5873fe 100%);; border: none; border-radius: 5px; margin: 20px auto;">
+            <div>
+                <p> <span>&copy; 2025 ZAR.INC All rights reserved.</span></p>
+            </div>
+        </div>
+    
+    </footer>
+
+
+    <!-- HANDLE ADDING + REMOVING -->
+    <script>
+
+        const khata = JSON.parse(localStorage.getItem('khata') || '[]');
+        const khata_form = document.getElementById('khata_form');
+        const khata_list = document.getElementById('khata_list');
+
+        function RENDER_KHATA() {
+            khata_list.innerHTML = '';
+            khata.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.textContent = task;
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.addEventListener('click', () => {
+                    khata.splice(index, 1);
+                    localStorage.setItem('khata', JSON.stringify(khata));
+                    RENDER_KHATA();
+                });
+                li.appendChild(removeButton);
+                khata_list.appendChild(li);
+            });
+        }
+
+        khata_form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const task = document.getElementById('task').value;
+            khata.push(task);
+            localStorage.setItem('khata', JSON.stringify(khata));
+            RENDER_KHATA();
+            document.getElementById('task').value = '';
+        });
+
+        document.addEventListener('DOMContentLoaded', RENDER_KHATA);
+    </script>
+
+
+    <!-- THEME TOGGLE -->
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle("dark-mode");
+            document.querySelector(".theme-switch").classList.toggle("active");
+        }
+    </script>
+
+
+    <!-- FETCHING IP -->
+    <script>
+        fetch("https://api64.ipify.org?format=json")
+            .then(response => response.json())
+            .then(data => document.getElementById("ip-dekhao").innerText = "Hey👋 { " + data.ip + " }")
+            .catch(error => console.error("Error fetching IP:", error));
+    </script>
+
+
+    <!-- RESTRICT ACCESS TO DEV TOOLS DIRECTLY. -->
+    <script>
+        document.addEventListener("contextmenu", function(event) {
+            event.preventDefault();
+        });
+        
+        document.addEventListener("keydown", function(event) {
+            if (event.ctrlKey && (event.key === "u" || event.key === "s" || event.key === "i" || event.key === "j")) {
+                event.preventDefault();
+            }
+            if (event.key === "F12") {
+                event.preventDefault();
+            }
+        });
+
+        document.addEventListener("keydown", function(event) {
+            if (
+                (event.ctrlKey && event.shiftKey && (event.key === "I" || event.key === "J" || event.key === "C")) || // Ctrl+Shift+I/J/C
+                (event.ctrlKey && event.key === "U") || // Ctrl+U
+                (event.key === "F12") // F12
+            ) {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+
+</body>
+</html>
